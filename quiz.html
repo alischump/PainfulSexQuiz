@@ -984,6 +984,129 @@ function showEmailCapture() {
   emailScreen.addEventListener('animationend', () => emailScreen.classList.remove('fade-in'), { once: true });
 }
 
+// ══════════════════════════════════════════════════════════════
+// EMAILJS CONFIG
+// ──────────────────────────────────────────────────────────────
+// 1. Go to https://emailjs.com and create a free account
+// 2. Add an Email Service (Gmail recommended) → copy Service ID
+// 3. Create a Template → paste the HTML from buildResultEmail()
+//    as the HTML Message body. Add these template variables:
+//      {{to_email}}, {{to_name}}, {{result_badge}},
+//      {{result_heading}}, {{result_body}}, {{result_html}}
+// 4. Copy your Template ID and Public Key
+// 5. Replace the three placeholder values below
+// ══════════════════════════════════════════════════════════════
+const EMAILJS_SERVICE_ID  = 'service_590xy5j';
+const EMAILJS_TEMPLATE_ID = 'template_16i7xw9';
+const EMAILJS_PUBLIC_KEY  = 'i0YzcMTiQd_8foG60';
+
+// Builds a full branded HTML email that mirrors the on-screen results card
+function buildResultEmail(firstName, result) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Your FloorplayUnfiltered Quiz Result</title>
+</head>
+<body style="margin:0;padding:0;background:#F8EDE7;font-family:'Helvetica Neue',Arial,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8EDE7;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+        <!-- HEADER -->
+        <tr><td align="center" style="padding:0 0 28px;">
+          <p style="margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:0.12em;
+                    color:#C4906A;text-transform:uppercase;font-family:'Helvetica Neue',Arial,sans-serif;">
+            FloorplayUnfiltered &nbsp;·&nbsp; Ali Schum, MS OTR/L
+          </p>
+        </td></tr>
+
+        <!-- MAIN CARD -->
+        <tr><td style="background:#FDF8F5;border-radius:12px;padding:40px 40px 32px;
+                       box-shadow:0 1px 12px rgba(28,45,79,0.06);">
+
+          <!-- Result badge -->
+          <p style="margin:0 0 16px;display:inline-block;font-size:11px;font-weight:600;
+                    letter-spacing:0.1em;text-transform:uppercase;color:#A8705A;
+                    background:#F8EDE7;border:1px solid #E8D3C2;padding:5px 14px;
+                    border-radius:100px;font-family:'Helvetica Neue',Arial,sans-serif;">
+            ${result.badge}
+          </p>
+
+          <!-- Result heading -->
+          <h1 style="margin:0 0 16px;font-size:28px;font-weight:600;color:#1C2D4F;
+                     line-height:1.25;font-family:Georgia,'Times New Roman',serif;">
+            ${result.heading}
+          </h1>
+
+          <!-- Divider -->
+          <div style="width:48px;height:2px;background:#C4906A;border-radius:1px;margin:0 0 20px;"></div>
+
+          <!-- Result body -->
+          <p style="margin:0 0 32px;font-size:15px;color:#252525;line-height:1.75;
+                    font-family:'Helvetica Neue',Arial,sans-serif;">
+            ${result.body}
+          </p>
+
+          <!-- CTA box -->
+          <table width="100%" cellpadding="0" cellspacing="0"
+                 style="background:#EFE0D8;border-radius:8px;margin-bottom:12px;">
+            <tr><td style="padding:24px;">
+              <p style="margin:0 0 16px;font-size:14px;color:#2E4270;line-height:1.6;
+                        font-family:'Helvetica Neue',Arial,sans-serif;">
+                The complete guide — <em>Understanding Pain with Sex</em> — covers pelvic floor
+                relaxation, nervous-system regulation, lubrication, communication scripts,
+                graded exploration, and when to seek professional support.
+              </p>
+              <table cellpadding="0" cellspacing="0" width="100%">
+                <tr><td align="center">
+                  <a href="https://buy.stripe.com/test_cNidRb4NodfJ7ou9Rt77O00"
+                     style="display:inline-block;background:#1C2D4F;color:#FDF8F5;
+                            font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;
+                            font-weight:500;padding:14px 36px;border-radius:100px;
+                            text-decoration:none;letter-spacing:0.01em;">
+                    Get the complete guide
+                  </a>
+                </td></tr>
+              </table>
+            </td></tr>
+          </table>
+
+          <!-- Disclaimer -->
+          <p style="margin:20px 0 0;font-size:11px;color:#7A706C;line-height:1.65;
+                    text-align:center;font-family:'Helvetica Neue',Arial,sans-serif;">
+            This result is not a diagnosis. Sexual discomfort is often multifactorial.
+            Consider tracking patterns and seeking an individualized evaluation if symptoms persist.
+          </p>
+
+        </td></tr>
+
+        <!-- FOOTER -->
+        <tr><td align="center" style="padding:28px 0 0;">
+          <p style="margin:0 0 4px;font-size:11.5px;color:#7A706C;
+                    font-family:'Helvetica Neue',Arial,sans-serif;">
+            This quiz is educational and does not replace individualized clinical care.
+          </p>
+          <p style="margin:0 0 4px;font-size:11.5px;color:#7A706C;
+                    font-family:'Helvetica Neue',Arial,sans-serif;">
+            Ali Schum, MS, OTR/L &nbsp;·&nbsp; Pelvic Health Occupational Therapist
+          </p>
+          <p style="margin:0;font-size:11.5px;color:#7A706C;
+                    font-family:'Helvetica Neue',Arial,sans-serif;">
+            © 2026 Ali Schum / FloorplayUnfiltered &nbsp;·&nbsp; All rights reserved
+          </p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+
+</body>
+</html>`;
+}
+
 async function submitResults() {
   // ── Client-side validation ─────────────────────────────────────
   const firstName = document.getElementById('firstName').value.trim();
@@ -1006,7 +1129,6 @@ async function submitResults() {
   }
   if (!valid) return;
 
-  // ── Build payload ──────────────────────────────────────────────
   const resultKey = calculateResult();
   const result    = RESULTS[resultKey];
 
@@ -1014,7 +1136,8 @@ async function submitResults() {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Sending…';
 
-  const payload = {
+  // ── 1. POST to Formspree (Ali's records) ──────────────────────
+  const formspreePayload = {
     firstName:     firstName,
     email:         email,
     _replyto:      email,
@@ -1025,25 +1148,36 @@ async function submitResults() {
     submittedAt:   new Date().toISOString()
   };
 
-  // ── POST directly to Formspree ─────────────────────────────────
   try {
-    const response = await fetch('https://formspree.io/f/mqpqkbgy', {
+    const fsResponse = await fetch('https://formspree.io/f/mqpqkbgy', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body:    JSON.stringify(payload)
+      body:    JSON.stringify(formspreePayload)
     });
-
-    if (response.ok) {
-      showThankYou(firstName);
-    } else {
-      throw new Error('Non-OK: ' + response.status);
-    }
+    if (!fsResponse.ok) console.warn('Formspree non-OK:', fsResponse.status);
   } catch (err) {
-    console.error('Submission error:', err);
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Get my results';
-    document.getElementById('submitError').classList.add('visible');
+    console.warn('Formspree error (non-fatal):', err);
   }
+
+  // ── 2. Send branded HTML results email via EmailJS ────────────
+  if (EMAILJS_PUBLIC_KEY) {
+    try {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email:       email,
+        to_name:        firstName,
+        result_badge:   result.badge,
+        result_heading: result.heading,
+        result_body:    result.body,
+        result_html:    buildResultEmail(firstName, result)
+      });
+    } catch (err) {
+      console.warn('EmailJS error (non-fatal):', err);
+      // Not blocking — user still sees results on screen
+    }
+  }
+
+  showThankYou(firstName);
 }
 
 function skipEmail() {
@@ -1134,6 +1268,8 @@ function restartQuiz() {
 </script>
 
 <!-- Formspree SDK removed — form submits via direct fetch in submitResults() -->
+<!-- EmailJS SDK — sends branded HTML results email directly to the user -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 
 </body>
 </html>
